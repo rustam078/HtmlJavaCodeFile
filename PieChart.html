@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pie Chart Example</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            // Dummy data
+            var arrayelements = [
+                [{status: "Completed", statusCount: 45}],
+                [{status: "Pending", statusCount: 30}],
+                [{status: "In Progress", statusCount: 25}]
+            ];
+            createPieChart(arrayelements, "Task Status", "piechartcall");
+        }
+
+        function createPieChart(arrayelements, titleName, id) {
+            var rootelements = [];
+            var header = ['status', 'count'];
+            rootelements.push(header);
+            $.each(arrayelements, function(index, value) {
+                $.each(value, function(index1, value1) {
+                    var root = [value1.status, parseInt(value1.statusCount)];
+                    rootelements.push(root);
+                });
+            });
+            var data = google.visualization.arrayToDataTable(rootelements);
+            var numRows = data.getNumberOfRows();
+            var colors = [];
+            for (var i = 0; i < numRows; i++) {
+                colors.push(getRandomColor());
+            }
+            var options = {
+                width: 500,
+                height: 250,
+                title: titleName,
+                backgroundColor: 'white',
+                fontName: 'Belleza',
+                is3D: true,
+                pieHole: 0.1,
+                pieSliceText: 'none',
+                legend: {
+                    position: 'labeled',
+                    textStyle: {
+                        color: '#6b6c6d',
+                        fontSize: 14
+                    }
+                },
+                titleTextStyle: {
+                    color: '#0d334c',
+                    fontName: 'Belleza',
+                    bold: true,
+                    fontSize: 18
+                },
+                tooltip: {
+                    textStyle: {
+                        color: '#0d334c',
+                        fontName: 'Belleza',
+                        fontSize: 14,
+                        bold: true,
+                    },
+                    showColorCode: true
+                },
+                slices: colors.map(function (color) {
+                    return { color: color };
+                })
+            };
+            var chart = new google.visualization.PieChart(document.getElementById(id));
+            chart.draw(data, options);
+        }
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+</head>
+<body>
+    <p>Pie Chart</p>
+    <div id="piechartcall" style="height: 100%; width: auto;"></div>
+</body>
+</html>
